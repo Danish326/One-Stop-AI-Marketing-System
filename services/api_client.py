@@ -4,10 +4,12 @@ Streamlit frontend calls this module to interact with the FastAPI backend.
 All HTTP requests to the backend go through here.
 """
 
+import os
 import requests
 
 # ── Backend URL ──────────────────────────────────────────────────────────────
-API_BASE = "http://localhost:8000/api"
+# Automatically use the deployed backend unless running locally with an override
+API_BASE = os.getenv("NEXUS_API_URL", "https://one-stop-ai-marketing-system.onrender.com/api")
 
 _session = requests.Session()
 
