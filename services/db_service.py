@@ -40,8 +40,12 @@ def _init_db():
 
     try:
         from pymongo import MongoClient
+        import certifi
         from bson import ObjectId  # noqa: F401
-        _client = MongoClient(uri, serverSelectionTimeoutMS=5000)
+         
+        # We must explicitly provide the CA certificates, especially on Python 3.11+ linux environments (like Render),
+        # otherwise MongoDB Atlas handshake fails with '[SSL: TLSV1_ALERT_INTERNAL_ERROR]'.
+        _client = MongoClient(uri, serverSelectionTimeoutMS=5000, tlsCAFile=certifi.where())
         # Test connection
         _client.admin.command("ping")
         _db = _client.get_default_database("nexus")
